@@ -6,6 +6,8 @@ This repository only use to deploy [Streamlit.app](https://dicoding-airquality-a
 
 If you run in your pc, you should change the directory of read.csv(data)
 
+The zip file that I sent in the Dicoding project submission is code that can be run on a local computer.
+
 # Dataset
 Find the Air Quality Dataset in [Air Quality Dataset](https://github.com/marceloreis/HTI/tree/master)
 
