@@ -6,7 +6,7 @@ Find the Air Quality Dataset in [Air Quality Dataset](https://github.com/marcelo
 ## Setup environment
 
 - Install Visual Studio Code for Editor
-- Execute this command on command line ( as administrator prefered)
+- Execute this command on command line (as administrator prefered)
 
 ```
 pip install numpy pandas scipy matplotlib seaborn jupyter
