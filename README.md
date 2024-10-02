@@ -1,8 +1,7 @@
 # Belajar Analisis Data dengan Python
 Proyek ini bertujuan untuk membuat dashboard interaktif yang menganalisis dan memvisualisasikan data kualitas udara yang memungkinkan pengguna untuk mengeksplorasi tren dan pola pencemaran dengan mudah
 
-## Air Quality Dataset, Beijing, China
-[Air Quality Dataset](https://github.com/marceloreis/HTI/tree/master)
+Find the Air Quality Dataset in [Air Quality Dataset](https://github.com/marceloreis/HTI/tree/master)
 
 ## Setup environment
 
