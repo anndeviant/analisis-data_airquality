@@ -2,7 +2,8 @@
 Proyek ini bertujuan untuk membuat dashboard interaktif yang menganalisis dan memvisualisasikan data kualitas udara yang memungkinkan pengguna untuk mengeksplorasi tren dan pola pencemaran dengan mudah
 
 # Noted
-This repository only use to deploy [Streamlit.app]https://dicoding-airquality-annas-sovianto.streamlit.app/
+This repository only use to deploy [Streamlit.app](https://dicoding-airquality-annas-sovianto.streamlit.app/)
+
 If you run in your pc, you should change the directory of read.csv(data)
 
 # Dataset
