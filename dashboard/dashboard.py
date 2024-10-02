@@ -81,7 +81,7 @@ def load_data():
     df_Wanshouxigong,
 ) = load_data()
 
-st.sidebar.image("images/air-quality.png")
+st.sidebar.image("dashboard/images/air-quality.png")
 st.sidebar.title("Air Quality Index")
 menu = st.sidebar.selectbox(
     "Pilih Menu:",
