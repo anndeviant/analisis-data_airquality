@@ -1,6 +1,11 @@
 # Belajar Analisis Data dengan Python
 Proyek ini bertujuan untuk membuat dashboard interaktif yang menganalisis dan memvisualisasikan data kualitas udara yang memungkinkan pengguna untuk mengeksplorasi tren dan pola pencemaran dengan mudah
 
+# Noted
+This repository only use to deploy [Streamlit.app]https://dicoding-airquality-annas-sovianto.streamlit.app/
+If you run in your pc, you should change the directory of read.csv(data)
+
+# Dataset
 Find the Air Quality Dataset in [Air Quality Dataset](https://github.com/marceloreis/HTI/tree/master)
 
 ## Setup environment
