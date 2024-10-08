@@ -13,7 +13,7 @@ Find the Air Quality Dataset in [Air Quality Dataset](https://github.com/marcelo
 
 ## Setup environment
 
-- Install Visual Studio Code for Editor
+- Install Visual Studio Code for Better Code Editor
 - Execute this command on command line (as administrator prefered)
 
 ```
