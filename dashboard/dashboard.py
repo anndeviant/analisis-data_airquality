@@ -137,31 +137,71 @@ elif menu == "Pertanyaan 1":
         "Bagaimana perbandingan rata-rata tingkat PM2.5 dan PM10 di berbagai kota dan kota mana yang memiliki tingkat polusi tertinggi dan terendah?"
     )
 
-    # Mengonversi kolom date_time menjadi datetime
+    # Data preprocessing
     df_all_clean["date_time"] = pd.to_datetime(df_all_clean["date_time"])
 
-    # Menghitung rata-rata PM2.5 dan PM10 untuk setiap kota
     rata_rata_pm25 = df_all_clean.groupby("station")["PM2.5"].mean()
     rata_rata_pm10 = df_all_clean.groupby("station")["PM10"].mean()
 
-    # Membuat DataFrame baru untuk perbandingan
     rata_rata = pd.DataFrame({"PM2.5": rata_rata_pm25, "PM10": rata_rata_pm10})
     rata_rata = rata_rata.sort_values(by="PM2.5", ascending=False)
 
-    # Plotting
+    # Membuat figure
     plt.figure(figsize=(15, 10))
-    rata_rata.plot(kind="bar", alpha=0.7)
-    plt.title("Rata-rata Tingkat PM2.5 dan PM10 di Setiap Kota")
-    plt.xlabel("Kota")
-    plt.ylabel("Rata-rata Tingkat (µg/m³)")
-    plt.xticks(rotation=45, ha="right")
-    plt.tight_layout()
+
+    # Plot semua bars dengan alpha rendah terlebih dahulu
+    x = range(len(rata_rata.index))
+    width = 0.35
+
+    # PM2.5 bars - semua dengan alpha rendah
+    bars1 = plt.bar(
+        x, rata_rata["PM2.5"], width, label="PM2.5", color="#629FCA", alpha=0.6
+    )
+
+    # PM10 bars - semua dengan alpha rendah
+    bars2 = plt.bar(
+        [i + width for i in x],
+        rata_rata["PM10"],
+        width,
+        label="PM10",
+        color="#FFA556",
+        alpha=0.6,
+    )
+
+    # Temukan indeks nilai maksimum
+    max_pm25_idx = rata_rata["PM2.5"].idxmax()
+    max_pm10_idx = rata_rata["PM10"].idxmax()
+
+    # Plot bars untuk nilai maksimum dengan alpha penuh
+    plt.bar(
+        [rata_rata.index.get_loc(max_pm25_idx)],
+        rata_rata.loc[max_pm25_idx, "PM2.5"],
+        width,
+        color="#629FCA",
+        alpha=1.0,
+    )
+    plt.bar(
+        [rata_rata.index.get_loc(max_pm10_idx) + width],
+        rata_rata.loc[max_pm10_idx, "PM10"],
+        width,
+        color="#FFA556",
+        alpha=1.0,
+    )
+
+    # Menyesuaikan tampilan
+    plt.title("Rata-rata Tingkat PM2.5 dan PM10 di Setiap Kota", pad=20, fontsize=14)
+    plt.xlabel("Kota", fontsize=12)
+    plt.ylabel("Rata-rata Tingkat (µg/m³)", fontsize=12)
+    plt.xticks([i + width / 2 for i in x], rata_rata.index, rotation=45, ha="right")
     plt.legend(title="Jenis Partikel")
+
+    # Mengatur layout
+    plt.tight_layout()
 
     # Tampilkan plot di Streamlit
     st.pyplot(plt)
 
-    # Mendapatkan kota dengan PM2.5 dan PM10 tertinggi dan terendah
+    # Menghitung dan mencetak statistik
     kota_pm25_tertinggi = rata_rata_pm25.idxmax()
     kota_pm25_terendah = rata_rata_pm25.idxmin()
     kota_pm10_tertinggi = rata_rata_pm10.idxmax()
@@ -177,7 +217,6 @@ elif menu == "Pertanyaan 1":
         f"Kota dengan rata-rata tingkat PM10 tertinggi adalah {kota_pm10_tertinggi}"
     )
     st.write(f"Kota dengan rata-rata tingkat PM10 terendah adalah {kota_pm10_terendah}")
-
     # Insight/Kesimpulan
     st.subheader("Insight Grafik:")
     st.markdown(
@@ -244,10 +283,9 @@ elif menu == "Pertanyaan 3":
         "Bagaimana pola musiman tingkat NO2 di berbagai kota, fluktuasi tertinggi, serta tingkatan NO2 terkotor dan terbersih antar musim di Negara Beijing, China?"
     )
 
-    # Mengonversi kolom date_time menjadi datetime
-    df_all_clean["date_time"] = pd.to_datetime(df_all_clean["date_time"])
+    # Assuming df_clean is already loaded
+    df_clean["date_time"] = pd.to_datetime(df_clean["date_time"])
 
-    # Menambahkan kolom musim berdasarkan bulan
     def get_season(month):
         if month in [3, 4, 5]:
             return "Musim Semi"
@@ -258,36 +296,67 @@ elif menu == "Pertanyaan 3":
         else:
             return "Musim Dingin"
 
-    df_all_clean["musim"] = df_all_clean["date_time"].dt.month.map(get_season)
+    df_clean["musim"] = df_clean["date_time"].dt.month.map(get_season)
 
-    # Menghitung rata-rata NO2 berdasarkan musim dan kota
-    rata_rata_musim_no2 = (
-        df_all_clean.groupby(["station", "musim"])["NO2"].mean().unstack()
+    # Calculating average NO2 levels for each season and city
+    rata_rata_musim_no2 = df_clean.groupby(["station", "musim"])["NO2"].mean().unstack()
+
+    # Create custom colormap dari biru (bagus) ke merah (buruk)
+    colors = ["#0571b0", "#92c5de", "#f4a582", "#ca0020"]
+    custom_cmap = sns.color_palette(colors, as_cmap=True)
+
+    # Mengubah figsize - menambah height menjadi 12
+    plt.figure(figsize=(14, 12))
+
+    # Membuat subplot dengan space di bawah untuk label
+    plt.subplot(1, 1, 1)
+    sns.heatmap(
+        rata_rata_musim_no2,
+        annot=True,
+        fmt=".1f",
+        cmap=custom_cmap,
+        cbar_kws={"label": "NO2 Level"},
+        square=False,
+    )  # square=False agar bisa lebih tinggi
+
+    plt.title(
+        "Rata-rata Tingkat NO2 Berdasarkan Musim dan Kota di Beijing, Tiongkok",
+        pad=20,
+        fontsize=14,
+        fontweight="bold",
     )
+    plt.ylabel("Kota", fontsize=12)
+    plt.xlabel("Musim", fontsize=12)
 
-    # Plotting heatmap
-    plt.figure(figsize=(14, 8))
-    sns.heatmap(rata_rata_musim_no2, annot=True, fmt=".1f", cmap="YlOrRd")
-    plt.title("Rata-rata Tingkat NO2 Berdasarkan Musim dan Kota di Beijing, China")
-    plt.ylabel("Kota")
+    # Mengatur rotasi dan posisi label
+    plt.xticks(rotation=0)
+    plt.yticks(rotation=0)
+
+    # Add grid lines
+    for i in range(len(rata_rata_musim_no2.index)):
+        plt.axhline(y=i, color="white", linewidth=1)
+    for i in range(len(rata_rata_musim_no2.columns)):
+        plt.axvline(x=i, color="white", linewidth=1)
+
+    # Mengatur margin bawah agar lebih besar
     plt.tight_layout()
+    plt.subplots_adjust(bottom=0.2)
 
     # Tampilkan plot di Streamlit
     st.pyplot(plt)
 
-    # Menghitung variasi musiman untuk setiap kota
+    # Calculate and print seasonal variation
     variasi_musim = rata_rata_musim_no2.max(axis=1) - rata_rata_musim_no2.min(axis=1)
     kota_variasi_terbesar = variasi_musim.idxmax()
 
     # Menghitung rata-rata NO2 untuk setiap kota
-    rata_rata_no2 = df_all_clean.groupby("station")["NO2"].mean()
+    rata_rata_no2 = df_clean.groupby("station")["NO2"].mean()
     kota_paling_kotor = rata_rata_no2.idxmax()
     kota_paling_bersih = rata_rata_no2.idxmin()
 
     st.write(f"Kota dengan variasi musiman NO2 terbesar: {kota_variasi_terbesar}")
     st.write(f"Kota dengan tingkat NO2 paling kotor: {kota_paling_kotor}")
     st.write(f"Kota dengan tingkat NO2 paling bersih: {kota_paling_bersih}")
-
     # Insight/Kesimpulan
     st.subheader("Insight:")
     st.markdown(
