@@ -284,7 +284,7 @@ elif menu == "Pertanyaan 3":
     )
 
     # Assuming df_clean is already loaded
-    df_clean["date_time"] = pd.to_datetime(df_clean["date_time"])
+    df_all_clean["date_time"] = pd.to_datetime(df_all_clean["date_time"])
 
     def get_season(month):
         if month in [3, 4, 5]:
@@ -296,10 +296,10 @@ elif menu == "Pertanyaan 3":
         else:
             return "Musim Dingin"
 
-    df_clean["musim"] = df_clean["date_time"].dt.month.map(get_season)
+    df_all_clean["musim"] = df_all_clean["date_time"].dt.month.map(get_season)
 
     # Calculating average NO2 levels for each season and city
-    rata_rata_musim_no2 = df_clean.groupby(["station", "musim"])["NO2"].mean().unstack()
+    rata_rata_musim_no2 = df_all_clean.groupby(["station", "musim"])["NO2"].mean().unstack()
 
     # Create custom colormap dari biru (bagus) ke merah (buruk)
     colors = ["#0571b0", "#92c5de", "#f4a582", "#ca0020"]
@@ -350,7 +350,7 @@ elif menu == "Pertanyaan 3":
     kota_variasi_terbesar = variasi_musim.idxmax()
 
     # Menghitung rata-rata NO2 untuk setiap kota
-    rata_rata_no2 = df_clean.groupby("station")["NO2"].mean()
+    rata_rata_no2 = df_all_clean.groupby("station")["NO2"].mean()
     kota_paling_kotor = rata_rata_no2.idxmax()
     kota_paling_bersih = rata_rata_no2.idxmin()
 
